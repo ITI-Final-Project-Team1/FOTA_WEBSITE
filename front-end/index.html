@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>BTL-FOTA</title>
+	  
+	  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+	
+	window.onload = function() {
+		var query = window.location.search.substring(1);
+		var parms = query.split('&');
+		for (var i=0; i<parms.length; i++) {
+		var pos = parms[i].indexOf('=');
+			if (pos > 0  && search_for == parms[i].substring(0,pos)) {
+				$("#qStr").html('<h2 class="error">file is'+parms[i].substring(pos+1)+'.</h2>');
+			}
+		}    
+	}
+
+
+	$(function(){
+		// File input field trigger when the HTML element is clicked
+		$("#dropBox").click(function(){
+			$("#fileToUpload").click();
+		});
+		
+		// Prevent browsers from opening the file when its dragged and dropped
+		$(document).on('drop dragover', function (e) {
+			e.preventDefault();
+		});
+
+		// Call a function to handle file upload on select file
+		$('input[type=file]').on('change', fileUpload);
+	});
+
+	function fileUpload(event){
+		$("#btn").html('');
+		// Allowed file types
+		var allowedFileTypes = '.hex'; //text.*|image.*|application.*
+
+		// Allowed file size
+		var allowedFileSize = 1024; //in KB
+
+
+		// Get selected file
+		files = event.target.files;
+		
+		// File data is presented as an array
+		for (var i = 0; i < files.length; i++) {
+			var file = files[i];
+					// Notify user about the file upload status
+			$("#dropBox").html("<h3>"+file.name+ "<br>uploading..</h3>");
+			if(!file.name.match(allowedFileTypes)) {              
+				// Check file type
+				$("#dropBox").html('<h3 class="error"> File extension error! Please select the allowed file type only.</h3>');
+			}else if(file.size > (allowedFileSize*1024)){
+				// Check file size (in bytes)
+				$("#dropBox").html('<h3 class="error">File size error! Sorry, the selected file size is larger than the allowed size (>'+allowedFileSize+'KB).</h3>');
+			}else{ 
+				$("#qStr").html('');
+			$("#btn").html('<center><button type="submit" id="upload" ">Upload<img id="uping" src="upload.png" alt="none"/></button></center>');
+			}  
+		}
+	}
+</script>
+</head>
+<body>
+  <img
+    class="demo-bg"
+    src="bin.jpg"
+    alt=""
+  >
+    <div class="card">
+		<h1>STM32F103x AppCode</h1>
+		
+		<h2>Upload File</h2>
+		<br>
+		<br>
+		<form action="upload.php" method="post" enctype="multipart/form-data">
+		   <div id="dropBox">
+				<h3>Select file to upload</h3>
+			</div>
+			<input type="file" name="fileToUpload" id="fileToUpload" accept=".hex"/>			
+			<br>
+			<br>
+			<div id="btn"></div>
+		</form>
+		
+		<div id="qStr"></div>
+		<!--
+		<center><button id="upload" onclick="uploadImage()">Upload<img id="uping" src="upload.png" alt="none"/></button></center>
+			
+		<center><div id="ShowUniqueID" hidden><p>Unique ID</p><input type="text" id="showunique"  value="23456" disabled></input></div></center>
+
+		<div class="Download" id="downloadiv">
+		<h2>Receive File</h2> 
+
+
+		<input type="text" id="unique" placeholder="Enter Unique ID">
+		<center><button id="show" onclick="showimage()">Download<img id="downimg" src="download.png" alt="none"/></button></div></center>
+		-->
+	</div>
+</body>
+<script src="script.js"></script>
+</html>
